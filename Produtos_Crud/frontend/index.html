@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Controle Financeiro - mLabs</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="style.css" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#001f29",
+                        "on-tertiary-container": "#074457",
+                        "on-secondary-fixed-variant": "#3f4c00",
+                        "outline-variant": { DEFAULT: "#E8DED1", dark: "#2C2C2C" },
+                        "surface": { DEFAULT: "#F9F5EF", dark: "#121212" },
+                        "secondary-container": "#E6D5B8",
+                        "inverse-primary": "#ffb59e",
+                        "tertiary-container": "#80b1c7",
+                        "surface-bright": { DEFAULT: "#FAF7F2", dark: "#383838" },
+                        "on-surface-variant": { DEFAULT: "#7C7063", dark: "#9E9E9E" },
+                        "tertiary": "#326578",
+                        "surface-container-highest": { DEFAULT: "#E8DED1", dark: "#383838" },
+                        "on-primary-fixed-variant": "#7f2a0d",
+                        "on-primary-fixed": "#3a0b00",
+                        "primary": "#FF5E3A",
+                        "on-surface": { DEFAULT: "#433D37", dark: "#E0E0E0" },
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#9f4122",
+                        "surface-container-low": { DEFAULT: "#FAF7F2", dark: "#181818" },
+                        "secondary-fixed": "#E6D5B8",
+                        "secondary": "#8B7E66",
+                        "on-secondary-fixed": "#181e00",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#FF8A65",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#752305",
+                        "tertiary-fixed-dim": "#9ccee4",
+                        "on-tertiary-fixed-variant": "#154d5f",
+                        "surface-container-lowest": { DEFAULT: "#FFFFFF", dark: "#0E0E0E" },
+                        "background": { DEFAULT: "#F9F5EF", dark: "#121212" },
+                        "on-secondary-container": "#5a6c00",
+                        "surface-container-high": { DEFAULT: "#F0E8DD", dark: "#2C2C2C" },
+                        "inverse-surface": "#433D37",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#bbe9ff",
+                        "primary-fixed-dim": "#ffb59e",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#F9F5EF",
+                        "surface-container": { DEFAULT: "#F5F0E8", dark: "#1E1E1E" },
+                        "primary-fixed": "#ffdbd0",
+                        "on-background": { DEFAULT: "#433D37", dark: "#E0E0E0" },
+                        "secondary-fixed-dim": "#bbd062",
+                        "error": "#ba1a1a",
+                        "surface-dim": { DEFAULT: "#E8DED1", dark: "#121212" },
+                        "surface-variant": { DEFAULT: "#F2EBE1", dark: "#333333" },
+                        "outline": { DEFAULT: "#A6998A", dark: "#616161" }
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "gutter": "32px",
+                        "container-padding": "64px",
+                        "section-gap": "120px",
+                        "card-internal": "40px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-xl": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container bg-background dark:bg-[#121212] dark:text-[#E0E0E0]">
+    <!-- Navegação -->
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl rounded-full border border-white/80 bg-white/50 dark:border-white/10 dark:bg-[#1E1E1E]/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(139,69,19,0.05)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] z-50 flex justify-between items-center py-3 px-6">
+        <a class="font-display-xl text-headline-md tracking-tighter text-primary flex items-center gap-2" href="#">
+        </a>
+        <div class="hidden md:flex items-center gap-6 flex-1 justify-center relative pb-1">
+            <div id="nav-indicator" class="absolute bottom-0 h-[3px] bg-primary rounded-full transition-all duration-300 ease-in-out"></div>
+            <a class="nav-link text-primary font-bold font-body-md text-body-md scale-95 active:scale-90 transition-transform" href="#cadastro">Cadastrar Transação</a>
+            <a class="nav-link text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md scale-95 active:scale-90 transition-transform" href="#transacoes-mes">Transações do Mês</a>
+            <a class="nav-link text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md scale-95 active:scale-90 transition-transform" href="#transacoes">Lista de Transações</a>
+            <a class="nav-link text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md scale-95 active:scale-90 transition-transform" href="#categorias">Cadastrar Opções</a>
+            <a class="nav-link text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md scale-95 active:scale-90 transition-transform" href="#relatorios">Relatórios</a>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+            <div class="relative flex items-center">
+                <input id="input-busca" class="bg-white/40 border border-white/60 rounded-full px-4 py-1.5 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:ring-0 focus:border-primary/40 transition-all backdrop-blur-md w-48 lg:w-64 dark:bg-[#2C2C2C] dark:border-[#444] dark:text-[#E0E0E0]" placeholder="Buscar..." type="text" aria-label="Buscar transações"/>
+                <button class="absolute right-2 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center" aria-hidden="true">
+                    <span class="material-symbols-outlined text-[18px]">search</span>
+                </button>
+            </div>
+            <button id="btn-ocultar-valores" class="p-2 rounded-full hover:bg-white/30 dark:hover:bg-white/10 transition-colors" aria-label="Ocultar ou mostrar valores">
+                <span class="material-symbols-outlined text-on-surface-variant">visibility_off</span>
+            </button>
+            <button id="btn-tema" class="p-2 rounded-full hover:bg-white/30 dark:hover:bg-white/10 transition-colors" aria-label="Alternar tema claro/escuro">
+                <span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Formulário de Cadastro -->
+    <section class="pt-32 pb-12 px-container-padding relative z-20" id="cadastro">
+        <div class="max-w-7xl mx-auto">
+            <div class="liquid-glass card-secao rounded-3xl p-8">
+                <h2 class="font-headline-lg font-bold text-on-surface mb-8 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">add_circle</span>
+                    Cadastrar Transação
+                </h2>
+                <form id="form-transacao" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Operação -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="operacao">Operação</label>
+                        <select id="operacao" name="operacao" class="input-field">
+                            <option>Despesa</option>
+                            <option>Receita</option>
+                        </select>
+                    </div>
+                    <!-- Categoria -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="categoria">Categoria</label>
+                        <select id="categoria" name="categoria" class="input-field">
+                            <option value="">Selecione a categoria</option>
+                            <option>Moradia</option>
+                            <option>Alimentação</option>
+                            <option>Transporte</option>
+                            <option>Lazer</option>
+                            <option>Saúde</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                    <!-- Descrição -->
+                    <div class="flex flex-col gap-2 md:col-span-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="descricao">Descrição</label>
+                        <input id="descricao" name="descricao" class="input-field" placeholder="Ex: Aluguel Mensal" type="text"/>
+                    </div>
+                    <!-- Valor -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="valor">Valor</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-[#9E9E9E]">R$</span>
+                            <input id="valor" name="valor" class="w-full input-field pl-10" placeholder="0,00" step="0.01" type="number"/>
+                        </div>
+                    </div>
+                    <!-- Vencimento -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="vencimento">Vencimento</label>
+                        <input id="vencimento" name="vencimento" class="input-field" type="date"/>
+                    </div>
+                    <!-- Parcela Corrente -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="parcela-corrente">Parcela Corrente</label>
+                        <input id="parcela-corrente" name="parcela_corrente" class="input-field" type="number" value="1"/>
+                    </div>
+                    <!-- Total de Parcelas -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="total-parcelas">Total de Parcelas</label>
+                        <input id="total-parcelas" name="total_parcelas" class="input-field" type="number" value="1"/>
+                    </div>
+                    <!-- Status -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="status">Status</label>
+                        <select id="status" name="status" class="input-field">
+                            <option>Pendente</option>
+                            <option>Pago</option>
+                        </select>
+                    </div>
+                    <!-- Banco -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="banco">Banco</label>
+                        <select id="banco" name="banco" class="input-field">
+                            <option value="">Selecione o banco</option>
+                            <option>Nubank</option>
+                            <option>Itaú</option>
+                            <option>Inter</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
+                    <!-- Data de Pagamento -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="data-pagamento">Data de Pagamento</label>
+                        <input id="data-pagamento" name="data_pagamento" class="input-field" type="date"/>
+                    </div>
+                    <!-- Método de Pagamento -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="metodo-pagamento">Método de Pagamento</label>
+                        <input id="metodo-pagamento" name="metodo_pagamento" class="input-field" placeholder="Ex: Pix, Cartão" type="text"/>
+                    </div>
+                    <!-- Botões de Ação -->
+                    <div class="md:col-span-3 lg:col-span-4 flex items-center justify-end gap-4 mt-4">
+                        <button class="px-6 py-3 text-on-surface-variant font-medium hover:text-primary transition-colors" type="reset">Limpar</button>
+                        <button id="btn-cancelar-edicao" class="hidden px-6 py-3 bg-red-500/10 text-red-500 font-medium rounded-xl hover:bg-red-500/20 transition-colors" type="button">Cancelar</button>
+                        <button class="bg-primary text-white px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all" type="submit">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Transações do Mês -->
+    <section class="py-12 px-container-padding relative z-20" id="transacoes-mes">
+        <div class="max-w-7xl mx-auto">
+            <div class="liquid-glass card-secao rounded-3xl p-8 overflow-hidden">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="font-headline-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">calendar_month</span>Transações do Mês
+                    </h2>
+                    <div class="flex items-center gap-4">
+                        <p id="mes-ano-atual" class="text-sm font-bold text-on-surface-variant uppercase tracking-wider"></p>
+                        <div class="relative">
+                            <button id="btn-filtro-status-mes" class="p-2 rounded-xl bg-white/40 border border-white/60 hover:bg-white/60 transition-colors dark:bg-[#2C2C2C] dark:border-[#444] dark:hover:bg-[#383838]">
+                                <span class="material-symbols-outlined text-on-surface-variant">filter_list</span>
+                            </button>
+                            <div id="dropdown-filtro-mes" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-lg border border-on-surface/10 z-50 py-2 dark:bg-[#1E1E1E] dark:border-[#444]">
+                                <button class="filtro-opcao-mes w-full text-left px-4 py-2 text-sm font-medium hover:bg-primary/10 text-on-surface transition-colors" data-filtro="Todas">Todas</button>
+                                <button class="filtro-opcao-mes w-full text-left px-4 py-2 text-sm font-medium hover:bg-primary/10 text-green-600 transition-colors" data-filtro="Pago">Pago</button>
+                                <button class="filtro-opcao-mes w-full text-left px-4 py-2 text-sm font-medium hover:bg-primary/10 text-yellow-600 transition-colors" data-filtro="Pendente">Pendente</button>
+                                <button class="filtro-opcao-mes w-full text-left px-4 py-2 text-sm font-medium hover:bg-primary/10 text-red-500 transition-colors" data-filtro="Atrasado">Atrasado</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table id="tabela-transacoes-mes" class="w-full text-left border-collapse" aria-label="Transações do mês">
+                        <thead class="border-b border-on-surface/10">
+                            <tr class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                                <th class="py-4 px-4">Operação</th>
+                                <th class="py-4 px-4">Descrição</th>
+                                <th class="py-4 px-4">Valor</th>
+                                <th class="py-4 px-4">Vencimento</th>
+                                <th class="py-4 px-4">Categoria</th>
+                                <th class="py-4 px-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-mes" class="text-sm text-on-surface">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paginacao-mes-container" class="mt-8 hidden">
+                    <div class="flex justify-center items-center gap-4">
+                        <button id="btn-pag-mes-anterior" class="p-2 rounded-lg hover:bg-white/30 dark:hover:bg-white/10 transition-colors text-on-surface-variant" aria-label="Página anterior">
+                            <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+                        </button>
+                        <div id="paginacao-mes" class="flex gap-2" role="group" aria-label="Paginação do mês">
+                        </div>
+                        <button id="btn-pag-mes-proxima" class="p-2 rounded-lg hover:bg-white/30 dark:hover:bg-white/10 transition-colors text-on-surface-variant" aria-label="Próxima página">
+                            <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lista de Transações -->
+    <section class="py-12 px-container-padding relative z-20" id="transacoes">
+        <div class="max-w-7xl mx-auto">
+            <div class="liquid-glass card-secao rounded-3xl p-8 overflow-hidden">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="font-headline-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">list_alt</span>Lista de Transações
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <div class="flex gap-2 items-center">
+                            <select id="filtro-ano-lista" class="input-field py-1.5 px-3 text-xs font-bold cursor-pointer">
+                                <option value="">Ano</option>
+                            </select>
+                            <select id="filtro-mes-lista" class="input-field py-1.5 px-3 text-xs font-bold cursor-pointer" disabled>
+                                <option value="">Mês</option>
+                            </select>
+                            <button id="btn-ord-venc" class="ordenacao-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-colors bg-primary text-white border border-primary dark:border-primary" data-dir="desc">Vencimento ↓</button>
+                        </div>
+                        <div class="relative">
+                            <button id="btn-filtro-status-lista" class="p-2 rounded-xl bg-white/40 border border-white/60 hover:bg-white/60 transition-colors dark:bg-[#2C2C2C] dark:border-[#444] dark:hover:bg-[#383838]">
+                                <span class="material-symbols-outlined text-on-surface-variant">filter_list</span>
+                            </button>
+                            <div id="dropdown-filtro-lista" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-lg border border-on-surface/10 z-50 py-2 dark:bg-[#1E1E1E] dark:border-[#444]">
+                                <button class="filtro-opcao-lista w-full text-left px-4 py-2 text-sm font-medium hover:bg-primary/10 text-on-surface transition-colors" data-filtro="Todas">Todas</button>
+                                <button class="filtro-opcao-lista w-full text-left px-4 py-2 text-sm font-medium hover:bg-primary/10 text-green-600 transition-colors" data-filtro="Pago">Pago</button>
+                                <button class="filtro-opcao-lista w-full text-left px-4 py-2 text-sm font-medium hover:bg-primary/10 text-yellow-600 transition-colors" data-filtro="Pendente">Pendente</button>
+                                <button class="filtro-opcao-lista w-full text-left px-4 py-2 text-sm font-medium hover:bg-primary/10 text-red-500 transition-colors" data-filtro="Atrasado">Atrasado</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table id="tabela-transacoes" class="w-full text-left border-collapse" aria-label="Lista de transações">
+                        <thead class="border-b border-on-surface/10">
+                            <tr class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                                <th class="py-4 px-4">Operação</th>
+                                <th class="py-4 px-4">Descrição</th>
+                                <th class="py-4 px-4">Valor</th>
+                                <th class="py-4 px-4">Vencimento</th>
+                                <th class="py-4 px-4">Categoria</th>
+                                <th class="py-4 px-4">Status</th>
+                                <th class="py-4 px-4 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela" class="text-sm text-on-surface">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-8 flex justify-center items-center gap-4">
+                    <button id="btn-pag-anterior" class="p-2 rounded-lg hover:bg-white/30 dark:hover:bg-white/10 transition-colors text-on-surface-variant" aria-label="Página anterior">
+                        <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+                    </button>
+                    <div id="paginacao" class="flex gap-2" role="group" aria-label="Paginação">
+                    </div>
+                    <button id="btn-pag-proxima" class="p-2 rounded-lg hover:bg-white/30 dark:hover:bg-white/10 transition-colors text-on-surface-variant" aria-label="Próxima página">
+                        <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cadastro de Opções -->
+    <section class="py-12 px-container-padding relative z-20" id="categorias">
+        <div class="max-w-7xl mx-auto">
+            <div class="liquid-glass card-secao rounded-3xl p-8">
+                <h2 class="font-headline-lg font-bold text-on-surface mb-8 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">settings</span>
+                    Cadastrar Opções
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Nova Categoria -->
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Nova Categoria</h3>
+                        <div class="flex gap-3">
+                            <input id="nova-categoria" class="flex-1 input-field" placeholder="Ex: Educação, Viagem" type="text"/>
+                            <button id="btn-adicionar-categoria" class="bg-primary text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all">Adicionar</button>
+                        </div>
+                        <ul id="lista-categorias" class="flex flex-wrap gap-2 mt-2"></ul>
+                    </div>
+                    <!-- Novo Banco -->
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Novo Banco</h3>
+                        <div class="flex gap-3">
+                            <input id="novo-banco" class="flex-1 input-field" placeholder="Ex: Santander, XP" type="text"/>
+                            <button id="btn-adicionar-banco" class="bg-primary text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all">Adicionar</button>
+                        </div>
+                        <ul id="lista-bancos" class="flex flex-wrap gap-2 mt-2"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Relatórios -->
+    <section class="py-12 px-container-padding relative z-20" id="relatorios">
+        <div class="max-w-7xl mx-auto">
+            <div class="liquid-glass card-secao rounded-3xl p-8">
+                <h2 class="font-headline-lg font-bold text-on-surface mb-8 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">pie_chart</span>
+                    Relatórios
+                </h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Visão Geral -->
+                    <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                        <div class="bg-white/40 border border-white/60 rounded-2xl p-6 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444]">
+                            <p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Saldo Total</p>
+                            <h4 id="saldo-total" class="text-2xl font-bold text-on-surface">R$ 0,00</h4>
+                        </div>
+                        <div class="bg-white/40 border border-white/60 rounded-2xl p-6 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444]">
+                            <p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Receitas do Mês</p>
+                            <h4 id="total-receitas" class="text-2xl font-bold text-green-600 dark:text-green-400">R$ 0,00</h4>
+                        </div>
+                        <div class="bg-white/40 border border-white/60 rounded-2xl p-6 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444]">
+                            <p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Despesas do Mês</p>
+                            <h4 id="total-despesas" class="text-2xl font-bold text-red-500 dark:text-red-400">R$ 0,00</h4>
+                        </div>
+                    </div>
+                    <!-- Distribuição por Categoria -->
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Distribuição por Categoria</h3>
+                        <div class="bg-white/40 border border-white/60 rounded-2xl p-8 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444]">
+                            <div class="flex items-center justify-center">
+                                <svg id="grafico-categorias" class="w-56 h-56" viewBox="0 0 100 100">
+                                    <path class="text-primary" d="M50 10 a 40 40 0 0 1 0 80 a 40 40 0 0 1 0 -80" fill="none" stroke="currentColor" stroke-dasharray="0, 100" stroke-width="8"></path>
+                                    <text id="grafico-porcentagem" class="font-bold fill-on-surface" text-anchor="middle" x="50" y="50" dominant-baseline="middle" style="font-size:10px">0%</text>
+                                </svg>
+                            </div>
+                            <div id="legenda-categorias" class="flex flex-wrap justify-center gap-3 mt-4"></div>
+                        </div>
+                    </div>
+                    <!-- Fluxo de Caixa -->
+                    <div class="lg:col-span-2 flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Fluxo de Caixa</h3>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-2 text-xs font-medium">
+                                    <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                                    <span class="text-on-surface-variant">Receitas</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-xs font-medium">
+                                    <span class="w-3 h-3 rounded-full bg-primary"></span>
+                                    <span class="text-on-surface-variant">Despesas</span>
+                                </div>
+                                <select id="filtro-ano-fluxo" class="bg-white/40 border border-white/60 rounded-full pl-4 pr-8 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider focus:ring-primary/40 focus:border-primary/40 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444] dark:text-[#E0E0E0]">
+                                </select>
+                            </div>
+                        </div>
+                        <div id="grafico-fluxo" class="bg-white/40 border border-white/60 rounded-2xl p-6 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="py-8 px-container-padding border-t border-on-surface/10 dark:border-white/10 bg-surface-container-low dark:bg-[#1E1E1E]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-on-surface-variant dark:text-[#9E9E9E] font-medium">&copy; 2026 mLabs - Controle Financeiro</p>
+            <p class="text-xs text-on-surface dark:text-[#E0E0E0] font-medium">Desenvolvido por MLisboa88</p>
+        </div>
+    </footer>
+
+    <div id="custom-cursor"></div>
+
+    <!-- Modal de Confirmação -->
+    <div id="modal-exclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-mensagem" class="fixed inset-0 z-[100] hidden items-center justify-center">
+        <div id="modal-overlay" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        <div class="relative bg-[#F9F5EF] border border-white/60 rounded-3xl p-8 max-w-md w-[90%] mx-4 z-10 dark:bg-[#1E1E1E] dark:border-[#444]">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="material-symbols-outlined text-red-500 text-[28px]" aria-hidden="true">warning</span>
+                <h3 id="modal-titulo" class="font-headline-md text-on-surface">Confirmar Exclusão</h3>
+            </div>
+            <p id="modal-mensagem" class="text-on-surface-variant mb-8">Tem certeza que deseja excluir esta transação?</p>
+            <div class="flex items-center justify-end gap-4">
+                <button id="modal-cancelar" class="px-6 py-3 text-on-surface-variant font-medium hover:text-primary transition-colors dark:hover:text-primary">Cancelar</button>
+                <button id="modal-confirmar" class="bg-red-500 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed top-24 right-6 z-[200] flex flex-col gap-3"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>
