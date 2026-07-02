@@ -186,7 +186,9 @@ App.Relatorios = {
                 return d && d.mes === mesAtual && d.ano === anoAtual;
             }).reduce((soma, t) => soma + t.valor, 0);
 
-            const saldo = receitasMes - despesasMes;
+            const totalReceitas = transacoes.filter(t => t.operacao === 'Receita').reduce((soma, t) => soma + t.valor, 0);
+            const totalDespesas = transacoes.filter(t => t.operacao === 'Despesa').reduce((soma, t) => soma + t.valor, 0);
+            const saldo = totalReceitas - totalDespesas;
 
             App.Relatorios._saldoTotal.textContent = App.Helpers.formatarMoeda(saldo, valoresOcultos);
             App.Relatorios._totalReceitas.textContent = App.Helpers.formatarMoeda(receitasMes, valoresOcultos);
