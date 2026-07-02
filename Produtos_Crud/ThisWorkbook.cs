@@ -18,8 +18,14 @@ namespace Produtos_Crud
             {
                 formControleFinanceiro = new produtos_crud();
             }
-            formControleFinanceiro.Show();
-            formControleFinanceiro.BringToFront();
+            if (formControleFinanceiro.Visible)
+            {
+                formControleFinanceiro.BringToFront();
+            }
+            else
+            {
+                formControleFinanceiro.Show();
+            }
         }
 
         private void ThisWorkbook_Startup(object sender, System.EventArgs e)

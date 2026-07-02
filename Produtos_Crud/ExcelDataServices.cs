@@ -27,6 +27,7 @@ namespace Produtos_Crud
         private const string ABA_TRANSACOES = "Transacoes";
         private const string ABA_CATEGORIAS = "Categorias";
         private const string ABA_BANCOS = "Bancos";
+        private const string ABA_METODOS_PAGAMENTO = "MetodosPagamento";
 
         private static string FormatarData(object valor)
         {
@@ -61,6 +62,7 @@ namespace Produtos_Crud
             InicializarAbaTransacoes(workbook);
             InicializarAbaCategorias(workbook);
             InicializarAbaBancos(workbook);
+            InicializarAbaMetodosPagamento(workbook);
         }
 
         private static void InicializarAbaTransacoes(Excel.Workbook workbook)
@@ -117,6 +119,25 @@ namespace Produtos_Crud
                 for (int i = 0; i < bancosDefault.Length; i++)
                 {
                     aba.Cells[i + 2, 1].Value = bancosDefault[i];
+                }
+
+                aba.Columns.AutoFit();
+            }
+        }
+
+        private static void InicializarAbaMetodosPagamento(Excel.Workbook workbook)
+        {
+            Excel.Worksheet aba = ObterOuCriarAba(workbook, ABA_METODOS_PAGAMENTO);
+
+            if (aba.Cells[1, 1].Value == null)
+            {
+                aba.Cells[1, 1].Value = "Método de Pagamento";
+                aba.Cells[1, 1].Font.Bold = true;
+
+                string[] metodosDefault = { "Pix", "Cartão de Crédito", "Cartão de Débito", "Boleto", "Transferência" };
+                for (int i = 0; i < metodosDefault.Length; i++)
+                {
+                    aba.Cells[i + 2, 1].Value = metodosDefault[i];
                 }
 
                 aba.Columns.AutoFit();
@@ -252,6 +273,42 @@ namespace Produtos_Crud
             for (int i = 0; i < bancos.Count; i++)
             {
                 aba.Cells[i + 2, 1].Value = bancos[i];
+            }
+
+            aba.Columns.AutoFit();
+        }
+
+        public static List<string> LerMetodosPagamento(Excel.Workbook workbook)
+        {
+            List<string> metodosPagamento = new List<string>();
+            Excel.Worksheet aba = ObterOuCriarAba(workbook, ABA_METODOS_PAGAMENTO);
+
+            int ultimaLinha = ((Excel.Range)aba.UsedRange).Rows.Count;
+
+            for (int i = 2; i <= ultimaLinha; i++)
+            {
+                if (aba.Cells[i, 1].Value != null)
+                {
+                    metodosPagamento.Add(aba.Cells[i, 1].Value.ToString());
+                }
+            }
+
+            return metodosPagamento;
+        }
+
+        public static void SalvarMetodosPagamento(Excel.Workbook workbook, List<string> metodosPagamento)
+        {
+            Excel.Worksheet aba = ObterOuCriarAba(workbook, ABA_METODOS_PAGAMENTO);
+
+            int ultimaLinha = ((Excel.Range)aba.UsedRange).Rows.Count;
+            if (ultimaLinha > 1)
+            {
+                aba.Range[aba.Cells[2, 1], aba.Cells[ultimaLinha, 1]].Clear();
+            }
+
+            for (int i = 0; i < metodosPagamento.Count; i++)
+            {
+                aba.Cells[i + 2, 1].Value = metodosPagamento[i];
             }
 
             aba.Columns.AutoFit();

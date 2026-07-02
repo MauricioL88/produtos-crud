@@ -21,7 +21,39 @@ namespace Produtos_Crud
         {
             InitializeComponent();
             this.Text = "Controle Financeiro";
+            CarregarIcone();
             InicializarWebView2();
+        }
+
+        private void CarregarIcone()
+        {
+            try
+            {
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                string icoPath = Path.Combine(basePath, "logo.ico");
+                if (File.Exists(icoPath))
+                {
+                    this.Icon = new Icon(icoPath);
+                    return;
+                }
+
+                icoPath = Path.Combine(basePath, "..", "logo.ico");
+                if (File.Exists(icoPath))
+                {
+                    this.Icon = new Icon(icoPath);
+                    return;
+                }
+
+                var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                using (var stream = assembly.GetManifestResourceStream("Produtos_Crud.logo.ico"))
+                {
+                    if (stream != null)
+                    {
+                        this.Icon = new Icon(stream);
+                    }
+                }
+            }
+            catch { }
         }
 
         private async void InicializarWebView2()
@@ -37,12 +69,20 @@ namespace Produtos_Crud
                 webView21.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
 
                 string caminhoFrontend = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "frontend", "index.html");
-                webView21.CoreWebView2.Navigate("file:///" + caminhoFrontend.Replace("\\", "/"));
+                if (File.Exists(caminhoFrontend))
+                {
+                    webView21.CoreWebView2.Navigate("file:///" + caminhoFrontend.Replace("\\", "/"));
+                }
+                else
+                {
+                    MessageBox.Show("Arquivo frontend não encontrado: " + caminhoFrontend,
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao inicializar WebView2: " + ex.Message,
-                    "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao inicializar WebView2:\n\n" + ex.ToString(),
+                    "Erro WebView2", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -82,6 +122,13 @@ namespace Produtos_Crud
                 SalvarDadosBancos(bancos);
                 dadosModificados = true;
                 EnviarConfirmacao("bancos_salvos");
+            }
+            else if (mensagem.Contains("\"acao\":\"salvar_metodos_pagamento\""))
+            {
+                var metodosPagamento = ExtrairListaString(mensagem, "metodos_pagamento");
+                SalvarDadosMetodosPagamento(metodosPagamento);
+                dadosModificados = true;
+                EnviarConfirmacao("metodos_pagamento_salvos");
             }
             else if (mensagem.Contains("\"acao\":\"carregar_dados\""))
             {
@@ -226,6 +273,20 @@ namespace Produtos_Crud
             }
         }
 
+        private void SalvarDadosMetodosPagamento(List<string> metodosPagamento)
+        {
+            try
+            {
+                Excel.Workbook workbook = Globals.ThisWorkbook.InnerObject;
+                ExcelDataServices.SalvarMetodosPagamento(workbook, metodosPagamento);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao salvar métodos de pagamento: " + ex.Message,
+                    "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void EnviarDadosParaJavaScript()
         {
             try
@@ -236,6 +297,7 @@ namespace Produtos_Crud
                 var transacoes = ExcelDataServices.LerTransacoes(workbook);
                 var categorias = ExcelDataServices.LerCategorias(workbook);
                 var bancos = ExcelDataServices.LerBancos(workbook);
+                var metodosPagamento = ExcelDataServices.LerMetodosPagamento(workbook);
 
                 var sb = new StringBuilder();
                 sb.Append("{");
@@ -263,6 +325,14 @@ namespace Produtos_Crud
                 {
                     if (i > 0) sb.Append(",");
                     sb.Append($"\"{bancos[i]}\"");
+                }
+                sb.Append("],");
+
+                sb.Append("\"metodos_pagamento\":[");
+                for (int i = 0; i < metodosPagamento.Count; i++)
+                {
+                    if (i > 0) sb.Append(",");
+                    sb.Append($"\"{metodosPagamento[i]}\"");
                 }
                 sb.Append("]");
 
