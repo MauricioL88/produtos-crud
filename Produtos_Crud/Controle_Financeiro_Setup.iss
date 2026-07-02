@@ -34,10 +34,11 @@ Source: "bin\Debug\Microsoft.Web.WebView2.Core.dll"; DestDir: "{app}"; Flags: ig
 Source: "bin\Debug\Microsoft.Web.WebView2.WinForms.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Debug\Microsoft.Web.WebView2.Wpf.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-; Frontend
-Source: "bin\Debug\frontend\index.html"; DestDir: "{app}\frontend"; Flags: ignoreversion
-Source: "bin\Debug\frontend\main.js"; DestDir: "{app}\frontend"; Flags: ignoreversion
-Source: "bin\Debug\frontend\style.css"; DestDir: "{app}\frontend"; Flags: ignoreversion
+; Frontend (todos os arquivos e subdiretórios)
+Source: "bin\Debug\frontend\*"; DestDir: "{app}\frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+; Ícone
+Source: "bin\Debug\logo.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Runtimes nativos
 Source: "bin\Debug\runtimes\win-arm64\native\WebView2Loader.dll"; DestDir: "{app}\runtimes\win-arm64\native"; Flags: ignoreversion

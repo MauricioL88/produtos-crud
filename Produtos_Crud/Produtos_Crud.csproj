@@ -256,6 +256,9 @@
     <Content Include="frontend\charts\LineChart.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="frontend\charts\DonutChart.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="frontend\sections\Navbar.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

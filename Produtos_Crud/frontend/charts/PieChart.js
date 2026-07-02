@@ -6,6 +6,8 @@ App.PieChart = {
         const graficoPorcentagem = document.getElementById('grafico-porcentagem');
         if (!graficoCategorias || !graficoPorcentagem) return;
 
+        transacoes = transacoes.filter(function(t) { return t.operacao === 'Despesa'; });
+
         const valoresPorCategoria = {};
         transacoes.forEach(t => {
             valoresPorCategoria[t.categoria] = (valoresPorCategoria[t.categoria] || 0) + t.valor;

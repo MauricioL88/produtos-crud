@@ -38,7 +38,12 @@ App.Relatorios = {
         h += '<div id="grafico-fluxo" class="bg-white/40 border border-white/60 rounded-2xl p-4 sm:p-6 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444]"></div>';
         h += '</div>';
         h += '<div class="flex flex-col gap-4">';
+        h += '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">';
         h += '<h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Distribui\u00e7\u00e3o por Categoria</h3>';
+        h += '<div class="flex items-center gap-2">';
+        h += '<select id="filtro-ano-categoria" class="bg-white/40 border border-white/60 rounded-full pl-4 pr-8 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider focus:ring-primary/40 focus:border-primary/40 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444] dark:text-[#F5F5F5]"><option value="">Total</option></select>';
+        h += '<select id="filtro-mes-categoria" class="bg-white/40 border border-white/60 rounded-full pl-4 pr-8 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider focus:ring-primary/40 focus:border-primary/40 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444] dark:text-[#F5F5F5]" disabled><option value="">M\u00eas</option></select>';
+        h += '</div></div>';
         h += '<div class="bg-white/40 border border-white/60 rounded-2xl p-5 sm:p-8 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444]">';
         h += '<div class="flex flex-col lg:flex-row items-center gap-6 sm:gap-8">';
         h += '<div class="flex-shrink-0">';
@@ -47,8 +52,24 @@ App.Relatorios = {
         h += '<text id="grafico-porcentagem" class="font-bold fill-on-surface dark:fill-on-surface" text-anchor="middle" x="50" y="50" dominant-baseline="middle" style="font-size:10px">0%</text>';
         h += '</svg></div>';
         h += '<div id="legenda-categorias" class="flex flex-col gap-2 flex-1 min-w-0 max-h-64 overflow-y-auto"></div>';
-        h += '</div></div></div>';
-        h += '</div></section>';
+h += '</div></div></div>';
+h += '<div class="flex flex-col gap-4">';
+h += '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">';
+h += '<h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Distribui\u00e7\u00e3o por Status</h3>';
+h += '<div class="flex items-center gap-2">';
+h += '<select id="filtro-ano-status" class="bg-white/40 border border-white/60 rounded-full pl-4 pr-8 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider focus:ring-primary/40 focus:border-primary/40 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444] dark:text-[#F5F5F5]"><option value="">Total</option></select>';
+h += '<select id="filtro-mes-status" class="bg-white/40 border border-white/60 rounded-full pl-4 pr-8 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider focus:ring-primary/40 focus:border-primary/40 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444] dark:text-[#F5F5F5]" disabled><option value="">M\u00eas</option></select>';
+h += '</div></div>';
+h += '<div class="bg-white/40 border border-white/60 rounded-2xl p-5 sm:p-8 backdrop-blur-md dark:bg-[#2C2C2C] dark:border-[#444]">';
+h += '<div class="flex flex-col lg:flex-row items-center gap-6 sm:gap-8">';
+h += '<div class="flex-shrink-0">';
+h += '<svg id="grafico-status" class="w-40 h-40 sm:w-56 sm:h-56" viewBox="0 0 100 100">';
+h += '<path d="M50 10 a 40 40 0 0 1 0 80 a 40 40 0 0 1 0 -80" fill="none" stroke="currentColor" class="text-on-surface/10 dark:text-on-surface/20" stroke-dasharray="0, 100" stroke-width="8"></path>';
+h += '<text id="grafico-status-porcentagem" class="font-bold fill-on-surface dark:fill-on-surface" text-anchor="middle" x="50" y="50" dominant-baseline="middle" style="font-size:10px">0%</text>';
+h += '</svg></div>';
+h += '<div id="legenda-status" class="flex flex-col gap-2 flex-1 min-w-0 max-h-64 overflow-y-auto"></div>';
+h += '</div></div></div>';
+h += '</div></section>';
         container.innerHTML += h;
     },
 
@@ -57,9 +78,55 @@ App.Relatorios = {
         App.Relatorios._totalReceitas = document.getElementById('total-receitas');
         App.Relatorios._totalDespesas = document.getElementById('total-despesas');
         App.Relatorios._filtroAnoFluxo = document.getElementById('filtro-ano-fluxo');
+        App.Relatorios._filtroAnoStatus = document.getElementById('filtro-ano-status');
+        App.Relatorios._filtroMesStatus = document.getElementById('filtro-mes-status');
+        App.Relatorios._filtroAnoCategoria = document.getElementById('filtro-ano-categoria');
+        App.Relatorios._filtroMesCategoria = document.getElementById('filtro-mes-categoria');
 
         if (App.Relatorios._filtroAnoFluxo) {
             App.Relatorios._filtroAnoFluxo.addEventListener('change', () => App.Relatorios.renderizarDados());
+        }
+
+        if (App.Relatorios._filtroAnoStatus) {
+            App.Relatorios._filtroAnoStatus.addEventListener('change', () => {
+                const ano = App.Relatorios._filtroAnoStatus.value;
+                const mesSelect = App.Relatorios._filtroMesStatus;
+                if (ano) {
+                    mesSelect.disabled = false;
+                    App.Relatorios._popularFiltroMesStatus(parseInt(ano, 10));
+                } else {
+                    mesSelect.disabled = true;
+                    mesSelect.innerHTML = '<option value="">M\u00eas</option>';
+                }
+                App.Relatorios.renderizarDados();
+            });
+        }
+
+        if (App.Relatorios._filtroMesStatus) {
+            App.Relatorios._filtroMesStatus.addEventListener('change', () => {
+                App.Relatorios.renderizarDados();
+            });
+        }
+
+        if (App.Relatorios._filtroAnoCategoria) {
+            App.Relatorios._filtroAnoCategoria.addEventListener('change', () => {
+                const ano = App.Relatorios._filtroAnoCategoria.value;
+                const mesSelect = App.Relatorios._filtroMesCategoria;
+                if (ano) {
+                    mesSelect.disabled = false;
+                    App.Relatorios._popularFiltroMesCategoria(parseInt(ano, 10));
+                } else {
+                    mesSelect.disabled = true;
+                    mesSelect.innerHTML = '<option value="">M\u00eas</option>';
+                }
+                App.Relatorios.renderizarDados();
+            });
+        }
+
+        if (App.Relatorios._filtroMesCategoria) {
+            App.Relatorios._filtroMesCategoria.addEventListener('change', () => {
+                App.Relatorios.renderizarDados();
+            });
         }
     },
 
@@ -80,7 +147,7 @@ App.Relatorios = {
 
         const valorAtual = App.Relatorios._filtroAnoFluxo.value;
         App.Relatorios._filtroAnoFluxo.innerHTML = '';
-        Array.from(anos).sort((a, b) => b - a).forEach(ano => {
+        Array.from(anos).sort((a, b) => a - b).forEach(ano => {
             const opt = document.createElement('option');
             opt.value = ano;
             opt.textContent = ano;
@@ -103,9 +170,10 @@ App.Relatorios = {
         });
         if (anos.size === 0) anos.add(new Date().getFullYear());
 
+        const anoCorrente = new Date().getFullYear();
         const valorAtual = App.State.getFiltroAnoLista();
         filtroAnoListaEl.innerHTML = '<option value="">Ano</option>';
-        Array.from(anos).sort((a, b) => b - a).forEach(ano => {
+        Array.from(anos).sort((a, b) => a - b).forEach(ano => {
             const opt = document.createElement('option');
             opt.value = ano;
             opt.textContent = ano;
@@ -114,7 +182,8 @@ App.Relatorios = {
         if (valorAtual && filtroAnoListaEl.querySelector('option[value="' + valorAtual + '"]')) {
             filtroAnoListaEl.value = valorAtual;
         } else {
-            App.State.setFiltroAnoLista('');
+            App.State.setFiltroAnoLista(anoCorrente);
+            filtroAnoListaEl.value = anoCorrente;
         }
 
         filtroAnoListaEl.addEventListener('change', () => {
@@ -166,6 +235,102 @@ App.Relatorios = {
         }
     },
 
+    popularFiltroAnoStatus() {
+        const filtroAnoStatusEl = document.getElementById('filtro-ano-status');
+        if (!filtroAnoStatusEl) return;
+
+        const anos = new Set();
+        App.State.getTransacoes().forEach(t => {
+            const d = App.Helpers.extrairMesAno(t.vencimento);
+            if (d) anos.add(d.ano);
+        });
+        if (anos.size === 0) anos.add(new Date().getFullYear());
+
+        const valorAtual = filtroAnoStatusEl.value;
+        filtroAnoStatusEl.innerHTML = '<option value="">Total</option>';
+        Array.from(anos).sort((a, b) => a - b).forEach(ano => {
+            const opt = document.createElement('option');
+            opt.value = ano;
+            opt.textContent = ano;
+            filtroAnoStatusEl.appendChild(opt);
+        });
+        if (valorAtual && filtroAnoStatusEl.querySelector('option[value="' + valorAtual + '"]')) {
+            filtroAnoStatusEl.value = valorAtual;
+        }
+    },
+
+    _popularFiltroMesStatus(ano) {
+        const filtroMesStatusEl = document.getElementById('filtro-mes-status');
+        if (!filtroMesStatusEl) return;
+
+        const mesesDisponiveis = new Set();
+        const nomesMeses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+        App.State.getTransacoes().forEach(t => {
+            const d = App.Helpers.extrairMesAno(t.vencimento);
+            if (d && d.ano == ano) mesesDisponiveis.add(d.mes);
+        });
+
+        const valorAtual = filtroMesStatusEl.value;
+        filtroMesStatusEl.innerHTML = '<option value="">Mês</option>';
+        Array.from(mesesDisponiveis).sort((a, b) => a - b).forEach(mes => {
+            const opt = document.createElement('option');
+            opt.value = mes;
+            opt.textContent = nomesMeses[mes];
+            filtroMesStatusEl.appendChild(opt);
+        });
+        if (valorAtual !== '' && filtroMesStatusEl.querySelector('option[value="' + valorAtual + '"]')) {
+            filtroMesStatusEl.value = valorAtual;
+        }
+    },
+
+    popularFiltroAnoCategoria() {
+        const filtroAnoCategoriaEl = document.getElementById('filtro-ano-categoria');
+        if (!filtroAnoCategoriaEl) return;
+
+        const anos = new Set();
+        App.State.getTransacoes().forEach(t => {
+            const d = App.Helpers.extrairMesAno(t.vencimento);
+            if (d) anos.add(d.ano);
+        });
+        if (anos.size === 0) anos.add(new Date().getFullYear());
+
+        const valorAtual = filtroAnoCategoriaEl.value;
+        filtroAnoCategoriaEl.innerHTML = '<option value="">Total</option>';
+        Array.from(anos).sort((a, b) => a - b).forEach(ano => {
+            const opt = document.createElement('option');
+            opt.value = ano;
+            opt.textContent = ano;
+            filtroAnoCategoriaEl.appendChild(opt);
+        });
+        if (valorAtual && filtroAnoCategoriaEl.querySelector('option[value="' + valorAtual + '"]')) {
+            filtroAnoCategoriaEl.value = valorAtual;
+        }
+    },
+
+    _popularFiltroMesCategoria(ano) {
+        const filtroMesCategoriaEl = document.getElementById('filtro-mes-categoria');
+        if (!filtroMesCategoriaEl) return;
+
+        const mesesDisponiveis = new Set();
+        const nomesMeses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+        App.State.getTransacoes().forEach(t => {
+            const d = App.Helpers.extrairMesAno(t.vencimento);
+            if (d && d.ano == ano) mesesDisponiveis.add(d.mes);
+        });
+
+        const valorAtual = filtroMesCategoriaEl.value;
+        filtroMesCategoriaEl.innerHTML = '<option value="">Mês</option>';
+        Array.from(mesesDisponiveis).sort((a, b) => a - b).forEach(mes => {
+            const opt = document.createElement('option');
+            opt.value = mes;
+            opt.textContent = nomesMeses[mes];
+            filtroMesCategoriaEl.appendChild(opt);
+        });
+        if (valorAtual !== '' && filtroMesCategoriaEl.querySelector('option[value="' + valorAtual + '"]')) {
+            filtroMesCategoriaEl.value = valorAtual;
+        }
+    },
+
     renderizarDados() {
         try {
             const hoje = new Date();
@@ -195,8 +360,30 @@ App.Relatorios = {
             App.Relatorios._totalDespesas.textContent = App.Helpers.formatarMoeda(despesasMes, valoresOcultos);
             App.Relatorios._saldoTotal.className = 'text-2xl font-bold ' + (saldo >= 0 ? 'text-green-600' : 'text-red-500');
 
-            App.PieChart.renderizar(transacoes, valoresOcultos);
+            const filtroAnoCat = document.getElementById('filtro-ano-categoria');
+            const filtroMesCat = document.getElementById('filtro-mes-categoria');
+            let transacoesCat = transacoes;
+            if (filtroAnoCat && filtroAnoCat.value) {
+                const anoCat = parseInt(filtroAnoCat.value, 10);
+                if (!isNaN(anoCat)) {
+                    transacoesCat = transacoesCat.filter(t => {
+                        const d = App.Helpers.extrairMesAno(t.vencimento);
+                        return d && d.ano === anoCat;
+                    });
+                    if (filtroMesCat && filtroMesCat.value !== '') {
+                        const mesCat = parseInt(filtroMesCat.value, 10);
+                        if (!isNaN(mesCat)) {
+                            transacoesCat = transacoesCat.filter(t => {
+                                const d = App.Helpers.extrairMesAno(t.vencimento);
+                                return d && d.mes === mesCat;
+                            });
+                        }
+                    }
+                }
+            }
+            App.PieChart.renderizar(transacoesCat, valoresOcultos);
             App.LineChart.renderizar(transacoes, valoresOcultos);
+            App.DonutChart.renderizar(transacoes, valoresOcultos);
         } catch (e) {
             console.error('Erro ao atualizar relatórios:', e);
         }

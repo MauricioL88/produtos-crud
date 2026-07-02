@@ -32,6 +32,8 @@ function renderizarTudo() {
     App.TabelaMes.renderizarDados();
     App.Relatorios.popularFiltroAnoFluxo();
     App.Relatorios.popularFiltroAnoLista();
+    App.Relatorios.popularFiltroAnoStatus();
+    App.Relatorios.popularFiltroAnoCategoria();
     App.Relatorios.renderizarDados();
 }
 

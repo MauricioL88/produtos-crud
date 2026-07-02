@@ -45,7 +45,8 @@ O **Controle Financeiro** é um Add-in para Microsoft Excel desenvolvido com **V
 
 ### Relatórios e Gráficos
 - **Resumo Mensal** — Saldo total, receitas e despesas do mês
-- **Gráfico de Rosca** — Distribuição de despesas por categoria
+- **Gráfico de Rosca** — Distribuição de despesas por categoria (com filtros por ano/mês)
+- **Gráfico de Rosca por Status** — Distribuição de despesas por status (Pago/Pendente/Atrasado, com filtros por ano/mês)
 - **Gráfico de Linha** — Fluxo de caixa dos últimos 12 meses com animação SVG
 
 ### Interface Moderna
@@ -54,6 +55,7 @@ O **Controle Financeiro** é um Add-in para Microsoft Excel desenvolvido com **V
 - **Busca Global** — Pesquisa debounced (300ms) por descrição, categoria, banco, status, método de pagamento
 - **Filtros** — Por ano, mês e status (Todos/Pagos/Pendentes/Atrasados)
 - **Ordenação** — Por data de vencimento (crescente/decrescente)
+- **Paginação em Grupos** — Navegação entre grupos de páginas com botões `<<` e `>>`
 - **Cursor Personalizado** — Indicador visual animado que acompanha o mouse
 - **Navegação Mobile** — Bottom navigation adaptável com suporte a `safe-area-inset-bottom`
 - **Animações** — Glassmorphism, scroll reveal (IntersectionObserver), toast notifications, navegação suave
@@ -143,7 +145,8 @@ Produtos_Crud/
 │   │   │   ├── OptionsManager.js       # CRUD de opções reutilizável
 │   │   │   └── Theme.js                # Toggle tema/ocultar valores
 │   │   ├── charts/
-│   │   │   ├── PieChart.js             # Gráfico de rosca (SVG)
+│   │   │   ├── PieChart.js             # Gráfico de rosca por categoria (SVG)
+│   │   │   ├── DonutChart.js           # Gráfico de rosca por status (SVG)
 │   │   │   └── LineChart.js            # Gráfico de linha (SVG)
 │   │   └── sections/
 │   │       ├── Navbar.js               # Navegação desktop/mobile
@@ -175,7 +178,8 @@ Produtos_Crud/
 | `frontend/services/webview.js` | Ponte de comunicação com o backend C# via postMessage |
 | `frontend/components/Theme.js` | Gerenciamento de tema Dark/Light e ocultar valores |
 | `frontend/components/OptionsManager.js` | Componente reutilizável para CRUD de opções |
-| `frontend/charts/PieChart.js` | Gráfico de rosca SVG com legenda interativa |
+| `frontend/charts/PieChart.js` | Gráfico de rosca SVG para despesas por categoria com legenda interativa |
+| `frontend/charts/DonutChart.js` | Gráfico de rosca SVG para distribuição por status com legenda interativa |
 | `frontend/charts/LineChart.js` | Gráfico de linha SVG com gradientes e animação |
 | `frontend/sections/FormTransacao.js` | Formulário de cadastro/edição de transações |
 | `frontend/sections/Relatorios.js` | Dashboard com cards de resumo e gráficos |
