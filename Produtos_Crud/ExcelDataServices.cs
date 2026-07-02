@@ -32,11 +32,17 @@ namespace Produtos_Crud
         private static string FormatarData(object valor)
         {
             if (valor == null) return "";
+            if (valor is DateTime dt)
+                return dt.ToString("yyyy-MM-dd");
             string texto = valor.ToString();
             int indiceT = texto.IndexOf('T');
-            if (indiceT > 0) return texto.Substring(0, indiceT);
+            if (indiceT > 0) texto = texto.Substring(0, indiceT);
             int indiceEspaco = texto.IndexOf(' ');
-            return indiceEspaco > 0 ? texto.Substring(0, indiceEspaco) : texto;
+            if (indiceEspaco > 0) texto = texto.Substring(0, indiceEspaco);
+            var partes = texto.Split('/');
+            if (partes.Length == 3 && partes[2].Length == 4)
+                return $"{partes[2]}-{partes[1]}-{partes[0]}";
+            return texto;
         }
 
         public static Excel.Worksheet ObterOuCriarAba(Excel.Workbook workbook, string nomeAba)

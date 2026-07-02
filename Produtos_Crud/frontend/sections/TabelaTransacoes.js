@@ -130,7 +130,6 @@ App.TabelaTransacoes = {
         if (termoBusca) {
             resultado = resultado.filter(t =>
                 t.descricao.toLowerCase().includes(termoBusca) ||
-                t.operacao.toLowerCase().includes(termoBusca) ||
                 t.categoria.toLowerCase().includes(termoBusca) ||
                 t.banco.toLowerCase().includes(termoBusca) ||
                 t.status.toLowerCase().includes(termoBusca) ||

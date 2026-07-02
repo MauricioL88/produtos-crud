@@ -37,9 +37,10 @@ O **Controle Financeiro** é um Add-in para Microsoft Excel desenvolvido com **V
 - Status automáticos: **Pendente**, **Pago**, **Atrasado**
 - Transações com vencimento passado são marcadas automaticamente como "Atrasado"
 
-### Categorias e Bancos
+### Categorias, Bancos e Métodos de Pagamento
 - Gerenciamento dinâmico de categorias (Moradia, Alimentação, Transporte, Lazer, Saúde, Salário, Outros)
 - Gerenciamento de bancos (Nubank, Itaú, Inter, Outro)
+- Gerenciamento de métodos de pagamento (Pix, Cartão de Crédito, Cartão de Débito, Boleto, Transferência)
 - Adição e remoção de opções diretamente na interface
 
 ### Relatórios e Gráficos
@@ -50,35 +51,46 @@ O **Controle Financeiro** é um Add-in para Microsoft Excel desenvolvido com **V
 ### Interface Moderna
 - **Tema Dark/Light** — Toggle com persistência em localStorage
 - **Ocultar Valores** — Toggle de privacidade que mascara valores monetários
-- **Busca Global** — Pesquisa debounced por descrição, categoria, banco, status
+- **Busca Global** — Pesquisa debounced (300ms) por descrição, categoria, banco, status, método de pagamento
 - **Filtros** — Por ano, mês e status (Todos/Pagos/Pendentes/Atrasados)
 - **Ordenação** — Por data de vencimento (crescente/decrescente)
-- **Animações** — Glassmorphism, scroll animations, toast notifications, navegação suave
+- **Cursor Personalizado** — Indicador visual animado que acompanha o mouse
+- **Navegação Mobile** — Bottom navigation adaptável com suporte a `safe-area-inset-bottom`
+- **Animações** — Glassmorphism, scroll reveal (IntersectionObserver), toast notifications, navegação suave
 
 ---
 
 ## Arquitetura
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                     ARQUITETURA DO SISTEMA                       │
-│                                                                  │
-│  ┌─────────────┐    WebView2 Message Bus    ┌──────────────────┐ │
-│  │  Frontend    │◄─────────────────────────►│  Backend C#      │ │
-│  │  (HTML/JS)   │  postMessage / onmessage  │  (WinForms+VSTO) │ │
-│  └─────────────┘                            └────────┬─────────┘ │
-│                                                      │           │
-│                                               Excel Interop API  │
-│                                                      │           │
-│                                              ┌───────▼────────┐  │
-│                                              │  Planilha Excel │  │
-│                                              │  (.xlsx)        │  │
-│                                              │                 │  │
-│                                              │  Aba: Transacoes│  │
-│                                              │  Aba: Categorias│  │
-│                                              │  Aba: Bancos    │  │
-│                                              └─────────────────┘  │
-└──────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                       ARQUITETURA DO SISTEMA                         │
+│                                                                      │
+│  ┌─────────────────────┐  WebView2 Message Bus  ┌──────────────────┐│
+│  │  Frontend (SPA)     │◄──────────────────────►│  Backend C#      ││
+│  │                     │  postMessage/onmessage  │  (WinForms+VSTO) ││
+│  │  ┌───────────────┐  │                         │                  ││
+│  │  │ sections/*.js │  │                         │  produtos_crud  ││
+│  │  │ components/*. │  │                         │  .cs (bridge)   ││
+│  │  │ charts/*.js   │──┤                         │        │        ││
+│  │  └───────┬───────┘  │                         │        │        ││
+│  │          │ state.js │                         │ ExcelDataServices│
+│  │          │ webview  │                         │  .cs (CRUD)     ││
+│  │          │ .js      │                         │        │        ││
+│  │  index.html,style   │                         │ Excel Interop   ││
+│  │  .css, main.js      │                         │        │        ││
+│  └─────────────────────┘                         └────────┼─────────┘│
+│                                                           │          │
+│                                                   ┌───────▼────────┐ │
+│                                                   │  Planilha Excel │ │
+│                                                   │  (.xlsx)        │ │
+│                                                   │                 │ │
+│                                                   │  Aba: Transacoes│ │
+│                                                   │  Aba: Categorias│ │
+│                                                   │  Aba: Bancos    │ │
+│                                                   │  Aba: MetodosPag│ │
+│                                                   └─────────────────┘ │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Fluxo de Dados
@@ -101,16 +113,45 @@ Produtos_Crud/
 │   ├── Produtos_Crud.csproj             # Arquivo do projeto (.NET 4.8)
 │   ├── packages.config                  # Pacotes NuGet (WebView2)
 │   ├── Produtos_Crud.xlsx              # Planilha Excel (host do add-in)
+│   ├── logo.ico                        # Ícone da aplicação
 │   │
 │   ├── ExcelDataServices.cs            # Camada de dados (leitura/escrita Excel)
 │   ├── ThisWorkbook.cs                 # Ponto de entrada do add-in
+│   ├── ThisWorkbook.Designer.cs        # Designer VSTO
 │   ├── produtos_crud.cs                # Form WinForms com WebView2
 │   ├── produtos_crud.Designer.cs       # Layout do formulário
+│   ├── Planilha1.cs                    # Host item da planilha
 │   │
-│   ├── frontend/                       # Interface web (SPA)
+│   ├── frontend/                       # Interface web (SPA modular)
 │   │   ├── index.html                  # Página principal
-│   │   ├── main.js                     # Lógica da aplicação (~1400 linhas)
-│   │   └── style.css                   # Estilos customizados
+│   │   ├── main.js                     # Bootstrap e orquestração
+│   │   ├── style.css                   # Estilos customizados
+│   │   ├── assets/
+│   │   │   └── logo.svg                # Favicon SVG
+│   │   ├── config/
+│   │   │   └── constants.js            # Constantes (cores, defaults, paginação)
+│   │   ├── utils/
+│   │   │   └── helpers.js              # Funções utilitárias (formatação)
+│   │   ├── services/
+│   │   │   ├── state.js                # Gerenciamento de estado (Observer)
+│   │   │   └── webview.js              # Ponte de comunicação WebView2
+│   │   ├── components/
+│   │   │   ├── Toast.js                # Notificações toast
+│   │   │   ├── Modal.js                # Modal de confirmação
+│   │   │   ├── Pagination.js           # Paginação reutilizável
+│   │   │   ├── Dropdown.js             # Dropdown animado
+│   │   │   ├── OptionsManager.js       # CRUD de opções reutilizável
+│   │   │   └── Theme.js                # Toggle tema/ocultar valores
+│   │   ├── charts/
+│   │   │   ├── PieChart.js             # Gráfico de rosca (SVG)
+│   │   │   └── LineChart.js            # Gráfico de linha (SVG)
+│   │   └── sections/
+│   │       ├── Navbar.js               # Navegação desktop/mobile
+│   │       ├── FormTransacao.js        # Formulário de transação
+│   │       ├── TabelaMes.js            # Tabela do mês atual
+│   │       ├── TabelaTransacoes.js     # Lista completa com busca
+│   │       ├── CadastroOpcoes.js       # Gerenciamento de opções
+│   │       └── Relatorios.js           # Dashboard com gráficos
 │   │
 │   ├── Properties/                     # Metadados do assembly
 │   │   └── AssemblyInfo.cs
@@ -124,12 +165,20 @@ Produtos_Crud/
 
 | Arquivo | Descrição |
 |---------|-----------|
-| `ExcelDataServices.cs` | Camada de dados — leitura e escrita nas abas do Excel via COM Interop |
+| `ExcelDataServices.cs` | Camada de dados — CRUD nas 4 abas do Excel via COM Interop |
 | `ThisWorkbook.cs` | Inicialização do add-in — cria botão no Actions Pane e abre o formulário |
 | `produtos_crud.cs` | Formulário WinForms — hospeda o WebView2 e gerencia comunicação bidirecional |
-| `frontend/index.html` | Interface SPA — formulários, tabelas, gráficos e relatórios |
-| `frontend/main.js` | Lógica do frontend — CRUD, paginação, filtros, gráficos SVG, tema |
+| `frontend/index.html` | Interface SPA — entry point da aplicação web |
+| `frontend/main.js` | Bootstrap — carrega módulos e inicializa a aplicação |
 | `frontend/style.css` | Estilos customizados — glassmorphism, animações, dark mode |
+| `frontend/services/state.js` | Gerenciamento de estado central com padrão Observer |
+| `frontend/services/webview.js` | Ponte de comunicação com o backend C# via postMessage |
+| `frontend/components/Theme.js` | Gerenciamento de tema Dark/Light e ocultar valores |
+| `frontend/components/OptionsManager.js` | Componente reutilizável para CRUD de opções |
+| `frontend/charts/PieChart.js` | Gráfico de rosca SVG com legenda interativa |
+| `frontend/charts/LineChart.js` | Gráfico de linha SVG com gradientes e animação |
+| `frontend/sections/FormTransacao.js` | Formulário de cadastro/edição de transações |
+| `frontend/sections/Relatorios.js` | Dashboard com cards de resumo e gráficos |
 | `Controle_Financeiro_Setup.iss` | Instalador Windows — registra o add-in no Excel |
 
 ---
@@ -145,7 +194,8 @@ Produtos_Crud/
 | CSS Framework | Tailwind CSS | CDN |
 | Ícones | Material Symbols Outlined | Google Fonts |
 | Fonte | Plus Jakarta Sans | Google Fonts |
-| Frontend | JavaScript Vanilla (ES6+) | — |
+| Frontend | JavaScript Vanilla (ES6+ Modules) | — |
+| State Management | Observer Pattern (pub/sub) | — |
 | Instalador | Inno Setup | — |
 
 ---
@@ -194,14 +244,14 @@ Produtos_Crud/
    - **Cadastrar Transação** — Formulário para criar/editar transações
    - **Transações do Mês** — Visualização do mês atual com filtros
    - **Lista de Transações** — Lista completa com busca e paginação
-   - **Cadastrar Opções** — Gerenciar categorias e bancos
+   - **Cadastrar Opções** — Gerenciar categorias, bancos e métodos de pagamento
    - **Relatórios** — Dashboard com gráficos e resumos
 
 ---
 
 ## Notas Técnicas
 
-- **Persistência em Excel** — Todas as abas ("Transacoes", "Categorias", "Bancos") são criadas dinamicamente no arquivo `.xlsx`
+- **Persistência em Excel** — Todas as abas ("Transacoes", "Categorias", "Bancos", "MetodosPagamento") são criadas dinamicamente no arquivo `.xlsx`
 - **Comunicação WebView2** — Utiliza `postMessage` / `onmessage` para ponte C# ↔ JavaScript
 - **Sem Backend Externo** — Não utiliza banco de dados, API ou servidor. O próprio arquivo Excel é o armazenamento
 - **Parsing Manual de JSON** — O lado C# serializa e parseia JSON manualmente (sem biblioteca externa)

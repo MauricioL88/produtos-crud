@@ -73,6 +73,7 @@ App.Modal = {
             App.State.setPaginaAtual(App.State.getPaginaAtual() - 1);
         }
 
+        App.WebView.enviar('salvar_transacoes', { transacoes: transacoes });
         App.Modal.fechar();
         App.Toast.mostrar('Transação excluída!', 'erro');
         App.State.notify();

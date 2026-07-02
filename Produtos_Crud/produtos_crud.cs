@@ -144,10 +144,15 @@ namespace Produtos_Crud
         private static string FormatarDataIso(string data)
         {
             if (string.IsNullOrEmpty(data)) return "";
-            int indiceT = data.IndexOf('T');
-            if (indiceT > 0) return data.Substring(0, indiceT);
-            int indiceEspaco = data.IndexOf(' ');
-            return indiceEspaco > 0 ? data.Substring(0, indiceEspaco) : data;
+            string texto = data;
+            int indiceT = texto.IndexOf('T');
+            if (indiceT > 0) texto = texto.Substring(0, indiceT);
+            int indiceEspaco = texto.IndexOf(' ');
+            if (indiceEspaco > 0) texto = texto.Substring(0, indiceEspaco);
+            var partes = texto.Split('/');
+            if (partes.Length == 3 && partes[2].Length == 4)
+                return $"{partes[2]}-{partes[1]}-{partes[0]}";
+            return texto;
         }
 
         private List<TransacaoFinanceira> ExtrairTransacoes(string json)
@@ -349,25 +354,6 @@ namespace Produtos_Crud
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (dadosModificados)
-            {
-                var resultado = MessageBox.Show(
-                    "Há dados não salvos. Deseja salvar antes de fechar?",
-                    "Salvar Alterações",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (resultado == DialogResult.Yes)
-                {
-                    EnviarDadosParaJavaScript();
-                }
-                else if (resultado == DialogResult.Cancel)
-                {
-                    e.Cancel = true;
-                    return;
-                }
-            }
-
             base.OnFormClosing(e);
         }
     }
