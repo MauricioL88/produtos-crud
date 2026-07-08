@@ -45,6 +45,7 @@ O **Controle Financeiro** é um Add-in para Microsoft Excel desenvolvido com **V
 
 ### Relatórios e Gráficos
 - **Resumo Mensal** — Saldo total, receitas e despesas do mês
+- **Cards de Resumo (Mobile)** — Pagamentos da semana, transações pagas e a pagar no mês com atualização dinâmica
 - **Gráfico de Rosca** — Distribuição de despesas por categoria (com filtros por ano/mês)
 - **Gráfico de Rosca por Status** — Distribuição de despesas por status (Pago/Pendente/Atrasado, com filtros por ano/mês)
 - **Gráfico de Linha** — Fluxo de caixa dos últimos 12 meses com animação SVG
@@ -151,6 +152,7 @@ Produtos_Crud/
 │   │   └── sections/
 │   │       ├── Navbar.js               # Navegação desktop/mobile
 │   │       ├── FormTransacao.js        # Formulário de transação
+│   │       ├── ResumoCartao.js         # Cards de resumo financeiro (mobile)
 │   │       ├── TabelaMes.js            # Tabela do mês atual
 │   │       ├── TabelaTransacoes.js     # Lista completa com busca
 │   │       ├── CadastroOpcoes.js       # Gerenciamento de opções
@@ -182,6 +184,7 @@ Produtos_Crud/
 | `frontend/charts/DonutChart.js` | Gráfico de rosca SVG para distribuição por status com legenda interativa |
 | `frontend/charts/LineChart.js` | Gráfico de linha SVG com gradientes e animação |
 | `frontend/sections/FormTransacao.js` | Formulário de cadastro/edição de transações |
+| `frontend/sections/ResumoCartao.js` | Cards de resumo financeiro — pagamentos da semana, transações pagas e a pagar no mês (mobile) |
 | `frontend/sections/Relatorios.js` | Dashboard com cards de resumo e gráficos |
 | `Controle_Financeiro_Setup.iss` | Instalador Windows — registra o add-in no Excel |
 

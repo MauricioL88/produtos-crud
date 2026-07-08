@@ -27,6 +27,7 @@ function renderizarTudo() {
 
     verificarAtrasadas();
 
+    App.ResumoCartao.renderizarDados();
     App.CadastroOpcoes.renderizarTudo();
     App.TabelaTransacoes.renderizarDados();
     App.TabelaMes.renderizarDados();
@@ -94,6 +95,7 @@ function renderizarSecoes() {
     app.innerHTML = '';
 
     App.Navbar.renderizar(document.body);
+    App.ResumoCartao.renderizar(app);
     App.FormTransacao.renderizar(app);
     App.TabelaMes.renderizar(app);
     App.TabelaTransacoes.renderizar(app);

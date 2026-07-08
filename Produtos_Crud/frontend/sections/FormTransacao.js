@@ -10,24 +10,8 @@ App.FormTransacao = {
 
     renderizar(container) {
         var h = '';
-        h += '<section class="pt-14 sm:pt-32 pb-24 sm:pb-12 px-4 sm:px-8 relative z-20" id="cadastro">';
+        h += '<section class="pt-4 sm:pt-6 pb-8 sm:pb-12 px-4 sm:px-8 relative z-20" id="cadastro">';
         h += '<div class="max-w-7xl mx-auto">';
-        h += '<div class="flex md:hidden flex-col items-center gap-3 mb-4">';
-        h += '<div class="flex items-center gap-2">';
-        h += '<svg width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">';
-        h += '<rect width="32" height="32" rx="8" fill="#FF5E3A"/>';
-        h += '<text x="16" y="22" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="16" fill="white">CF</text>';
-        h += '</svg>';
-        h += '<h1 class="text-lg font-bold text-on-surface">Controle Financeiro</h1>';
-        h += '</div>';
-        h += '<div class="flex items-center gap-3">';
-        h += '<button id="btn-ocultar-valores-mobile" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/40 border border-white/60 text-on-surface-variant text-xs font-bold hover:bg-white/60 transition-colors dark:bg-[#2C2C2C] dark:border-[#444]">';
-        h += '<span class="material-symbols-outlined text-[18px]">visibility_off</span>Ocultar valores';
-        h += '</button>';
-        h += '<button id="btn-tema-mobile" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/40 border border-white/60 text-on-surface-variant text-xs font-bold hover:bg-white/60 transition-colors dark:bg-[#2C2C2C] dark:border-[#444]">';
-        h += '<span class="material-symbols-outlined text-[18px]">dark_mode</span>Tema';
-        h += '</button>';
-        h += '</div></div>';
         h += '<div class="liquid-glass card-secao rounded-3xl p-5 sm:p-8">';
         h += '<h2 class="font-headline-lg font-bold text-on-surface mb-6 sm:mb-8 flex items-center gap-2">';
         h += '<span class="material-symbols-outlined text-primary">add_circle</span>';
